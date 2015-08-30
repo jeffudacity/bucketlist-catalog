@@ -2,30 +2,33 @@
 
 {% block content %}
 
-<!-- NAVBAR -->
 <nav class="navbar navbar-inverse navbar-fixed-top">
   <div class="container">
 
     <div id="add-nav">
-      <a href="{{ url_for('newItem', category_id=category.id) }}">Add</a>
+      <a href="{{ url_for('newCategory') }}">Add</a>
     </div>
 
     <div class="navbar-header">
       <a id="logo" class="navbar-brand" href="/">Catalog</a>
     </div>
-    
+    {% if 'username' not in session %}
+      <div class="navbar-right"><a href="/login">Login</a></div>
+    {% else %}
+      <a href="{{ url_for('disconnect') }}"><div class="navbar-right">Logout</div></a>
+    {% endif %}
     <div id="result"></div>
   </div>
-</nav><!-- END OF NAVBAR -->
+</nav>
 
 <div class="row">
   <div class="col-md-8 col-md-offset-2 center">
 
     <h1>List of goals in {{ category.name }}</h1>
-    {% if 'username' in login_session %}
+    {% if category.user_id == session['user_id'] %}
     <div id="commands">
       <span><a href="{{ url_for('editCategory', category_id=category.id)}}">Edit {{ category.name }}'s details</a></span>
-      |<span><a href="{{ url_for('deleteCategory', category_id=category.id)}}"> Delete {{ category.name }}'s profile</a></span>
+      |<span><a href="{{ url_for('deleteCategory', category_id=category.id)}}"> Delete {{ category.name }}</a></span>
     </div>
     {% endif %}
   </div>
@@ -47,17 +50,10 @@
             </div>
             
             <div>
-              <div class="col-xs-4 occasion">
-                <h5><!-- date -->
-                {{ item.date }}
-                </h5>
-              </div>
-
-              <div class="col-xs-4"><!-- Item Name -->
-                <h3><a href="{{ url_for('showItem', category_id=category.id, item_id=item.id ) }}">
-                {{ item.name }}
-                </a></h3>
-              </div>
+              <h3><a href="{{ url_for('showItem', category_id=category.id, item_id=item.id ) }}">
+              {{ item.name }}
+              </a></h3>
+              <p>{{ item.date }}</p>
             </div>
           </div>
 
@@ -66,7 +62,7 @@
       <div id="newgift"><a href="{{ url_for('newItem', category_id=category.id) }}">Add new goal</a></div></div>
 
     {% else %}
-      <p>You have no gifts for {{ category.name }} yet</p><a href="{{ url_for('newItem', category_id=category.id) }}"><i class="fa fa-gift"></i><br>Add new gift</a></div>
+      <p>There are no goals in {{ category.name }} yet</p><a href="{{ url_for('newItem', category_id=category.id) }}"><br>Add new goal</a></div>
     {% endif %}
 
   </div>

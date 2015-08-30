@@ -1,21 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
 
-<!-- NAVBAR -->
 <nav class="navbar navbar-inverse navbar-fixed-top">
   <div class="container">
 
     <div id="add-nav">
-      <a href="{{ url_for('newItem', category_id=category.id) }}">Add</a>
+      <a href="{{ url_for('newCategory') }}">Add</a>
     </div>
 
     <div class="navbar-header">
       <a id="logo" class="navbar-brand" href="/">Catalog</a>
     </div>
-    
+    {% if 'username' not in session %}
+      <div class="navbar-right"><a href="/login">Login</a></div>
+    {% else %}
+      <a href="{{ url_for('disconnect') }}"><div class="navbar-right">Logout</div></a>
+    {% endif %}
     <div id="result"></div>
   </div>
-</nav><!-- END OF NAVBAR -->
+</nav>
 
 <div class="row">
   <div id="item" class="col-md-8 col-md-offset-2">
@@ -25,7 +28,7 @@
     <div class="col-md-8">
       
       <h1>{{ item.name }}</h1>
-      {% if 'username' in login_session %}
+      {% if item.user_id == session['user_id'] %}
         <div id="commands">
           <span><a href="{{ url_for('editItem', category_id=category.id, item_id=item.id)}}">Edit</a></span>
           |<span><a href="{{ url_for('deleteItem', category_id=category.id, item_id=item.id)}}"> Delete</a></span>

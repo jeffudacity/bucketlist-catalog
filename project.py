@@ -320,10 +320,12 @@ def deleteCategory(category_id):
 @app.route('/catalog/<int:category_id>/items')
 def showItems(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
+    creator = getUserInfo(category.user_id)
     items = session.query(Item).filter_by(category_id=category_id).all()
     return render_template('items.html',
                            category=category,
-                           items=items)
+                           items=items,
+                           creator=creator)
 
 
 # Show all items from a category
@@ -346,10 +348,9 @@ def newItem(category_id):
     if request.method == 'POST':
         newItem = Item(name=request.form['name'],
                        description=request.form['description'],
-                       price=request.form['price'],
-                       occasion=request.form['occasion'],
+                       date=request.form['date'],
                        category_id=category_id,
-                       user_id=category.user_id,
+                       user_id=login_session['user_id'],
                        image=request.form['image'])
         session.add(newItem)
         flash('New Item successfully added in %s!' % category.name)
@@ -371,6 +372,10 @@ def editItem(category_id, item_id):
             editedItem.name = request.form['name']
         if request.form['image']:
             editedItem.image = request.form['image']
+        if request.form['description']:
+            editedItem.image = request.form['description']
+        if request.form['date']:
+            editedItem.date = request.form['date']
         session.add(editedItem)
         flash('Item successfully edited!')
         session.commit()
