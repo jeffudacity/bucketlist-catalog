@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+
+    <div id="add-nav">
+      <a href="{{ url_for('newCategory') }}">Add</a>
+    </div>
+
+    <div class="navbar-header">
+      <a id="logo" class="navbar-brand" href="/">Catalog</a>
+    </div>
+    
+    <div id="result"></div>
+  </div>
+</nav>
+
+<div class = 'flash'>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div>
+    {% for message in messages %}
+        <div> <strong> {{ message }} </strong> </div>
+    {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+</div>
+<div class="row">
+  
+  <div class="col-md-10 col-md-offset-1">
+    
+    <div class="col-md-4">
+      <h2>Categories</h2>
+
+        {% for category in categories %}
+        
+        <div id="categories" class='col-md-12'>
+          <a href="{{ url_for('showItems', category_id=category.id) }}">{{ category.name }}</a>
+        </div>
+
+        {% endfor %}
+        <div><a href="{{ url_for('newCategory') }}"><i class="fa fa-plus"></i> New Category</a></div>
+    </div>
+
+    <div class="col-md-8">
+      
+      <h1>Last activities</h1>
+      {% for item in items %}
+      <div id="listOfItems" class="col-md-6">
+        <p><a href="{{ url_for('showItem', category_id=item.category_id, item_id=item.id) }}">{{ item.name }} ({{ item.category.name }})</a></p>
+        <a href="{{ url_for('showItem', category_id=item.category_id, item_id=item.id) }}"><img src="{{ item.image }}"></a>
+      </div>
+      {% endfor %}
+    </div>
+
+
+  </div>
+
+</div>
+
+{% endblock %}

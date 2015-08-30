@@ -1,0 +1,146 @@
+body {
+  margin-top: 50px;
+  min-height: 500px;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+h2 {
+  margin: 30px auto;
+}
+
+a {
+  color: rgb(33, 160, 201);
+  text-decoration: none;
+}
+a:hover {
+  color: rgb(33, 160, 201);
+  text-decoration: none;
+}
+
+.container {
+
+}
+
+#categories {
+  margin-bottom: 20px;
+}
+
+#sidebar {
+  border-right: solid 1px gray;
+}
+
+
+
+#commands {
+  text-align: center;
+}
+
+#item {
+}
+
+#item img {
+  width: 100%;
+  max-height: 245px;
+  margin-top: 23px
+}
+
+#login {
+  text-align: center;
+  padding-top: 100px;
+}
+
+#listOfCategories img {
+  width: 100%
+}
+
+#listOfItems {
+  margin-top: 30px;
+}
+#listOfItems img {
+  width: 30%;
+}
+
+/* NAVBAR */
+
+#add-nav {
+  position: absolute;
+  padding-top: 15px;
+  font-size: 17px
+}
+.navbar {
+  background-color: rgb(231, 236, 243);
+  border-color: rgb(126,151,186);
+  color: rgb(33, 160, 201);
+  font-family: 'Ubuntu', sans-serif;
+}
+
+.navbar-brand
+{
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+  text-align: center;
+  margin: auto;
+}
+
+#logo {
+  color: rgb(33, 160, 201);
+  font-size: 32px;
+  width: 100px;
+  left: 50%;
+  margin-left: -40px;
+}
+
+#login {
+  border-radius:25px;
+  margin-top: 50px;
+}
+
+#fb-login {
+  vertical-align: 15px;
+}
+
+#btn-login, #signInButton {
+  margin: 10px;
+}
+#newcategory, #newitem {
+  font-size: 56px;
+  text-align: center;
+}
+.item-cards {
+  box-shadow: 0 0 3px gray;
+  padding: 20px;
+  text-align: center;
+  height: 285px;
+  margin-bottom: 20px;
+}
+.item-cards img {
+  max-width: 290px;
+  max-height: 184px;
+}
+
+.center {
+  text-align: center;
+}
+.flash {
+  text-align: center;
+  padding-top: 10px;
+}
+
+#birthday {
+  padding-top: 28px;
+}
+#cat-pic img {
+  max-height: 150px;
+}
+
+.occasion {
+  color: rgb(33, 160, 201);
+  padding-top: 16px;
+}
+
+.price {
+  color: rgb(33, 160, 201);
+  padding-top: 16px;
+}
