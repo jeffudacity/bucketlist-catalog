@@ -1,3 +1,4 @@
+import bleach
 from database_setup import Base, Category, Item, User
 from flask import Flask, flash, jsonify
 from flask import redirect, render_template, request, url_for, make_response
@@ -227,7 +228,26 @@ def getUserID(email):
     except:
         return None
 
-
+# DISCONNECT - Revoke a current user's token and reset their login_session
+@app.route('/gdisconnect')
+def gdisconnect():
+    # Only disconnect a connected user.
+    credentials = login_session.get('credentials')
+    if credentials is None:
+        response = make_response(
+            json.dumps('Current user not connected.'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    access_token = credentials.access_token
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
+    h = httplib2.Http()
+    result = h.request(url, 'GET')[0]
+    if result['status'] != '200':
+        # For whatever reason, the given token was invalid.
+        response = make_response(
+            json.dumps('Failed to revoke token for given user.', 400))
+        response.headers['Content-Type'] = 'application/json'
+        return response
 
 # Disconnect based on provider
 @app.route('/disconnect')
@@ -270,8 +290,8 @@ def newCategory():
         return redirect('/login')
     if request.method == 'POST':
         newCategory = Category(
-            name=request.form['name'],
-            image=request.form['image'],
+            name=bleach.clean(request.form['name']),
+            image=bleach.clean(request.form['image']),
             user_id=login_session['user_id'])
         session.add(newCategory)
         flash('New Category successfully added!')
@@ -288,11 +308,11 @@ def editCategory(category_id):
     editedCategory = session.query(Category).filter_by(id=category_id).one()
     if request.method == 'POST':
         if request.form['name']:
-            editedCategory.name = request.form['name']
+            editedCategory.name = bleach.clean(request.form['name'])
         if request.form['birthday']:
-            editedCategory.birthday = request.form['birthday']
+            editedCategory.birthday = bleach.clean(request.form['birthday'])
         if request.form['image']:
-            editedCategory.image = request.form['image']
+            editedCategory.image = bleach.clean(request.form['image'])
         session.add(editedCategory)
         flash('Category successfully edited')
         session.commit()
@@ -346,12 +366,12 @@ def newItem(category_id):
         return redirect('/login')
     category = session.query(Category).filter_by(id=category_id).one()
     if request.method == 'POST':
-        newItem = Item(name=request.form['name'],
-                       description=request.form['description'],
-                       date=request.form['date'],
+        newItem = Item(name=bleach.clean(request.form['name']),
+                       description=bleach.clean(request.form['description']),
+                       date=bleach.clean(request.form['date']),
                        category_id=category_id,
                        user_id=login_session['user_id'],
-                       image=request.form['image'])
+                       image=bleach.clean(request.form['image']))
         session.add(newItem)
         flash('New Item successfully added in %s!' % category.name)
         session.commit()
@@ -369,13 +389,13 @@ def editItem(category_id, item_id):
     editedItem = session.query(Item).filter_by(id=item_id).one()
     if request.method == 'POST':
         if request.form['name']:
-            editedItem.name = request.form['name']
+            editedItem.name = bleach.clean(request.form['name'])
         if request.form['image']:
-            editedItem.image = request.form['image']
+            editedItem.image = bleach.clean(request.form['image'])
         if request.form['description']:
-            editedItem.image = request.form['description']
+            editedItem.image = bleach.clean(request.form['description'])
         if request.form['date']:
-            editedItem.date = request.form['date']
+            editedItem.date = bleach.clean(request.form['date'])
         session.add(editedItem)
         flash('Item successfully edited!')
         session.commit()
@@ -419,4 +439,4 @@ def catalogJSON():
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
     app.debug = True
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=8000)
