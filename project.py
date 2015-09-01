@@ -1,11 +1,14 @@
 import bleach
+import os
 from database_setup import Base, Category, Item, User
 from flask import Flask, flash, jsonify
 from flask import redirect, render_template, request, url_for, make_response
+from flask import send_from_directory
 from flask import session as login_session
 from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
+from werkzeug import secure_filename
 
 import httplib2
 import json
@@ -13,7 +16,12 @@ import random
 import requests
 import string
 
+UPLOAD_FOLDER = 'UPLOAD_FOLDER/'
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 8 * 1024 * 1024
 
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
@@ -25,6 +33,16 @@ Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
+
+
+# File uploads
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
 # Create anti-forgery state token
@@ -228,6 +246,7 @@ def getUserID(email):
     except:
         return None
 
+
 # DISCONNECT - Revoke a current user's token and reset their login_session
 @app.route('/gdisconnect')
 def gdisconnect():
@@ -248,6 +267,7 @@ def gdisconnect():
             json.dumps('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
+
 
 # Disconnect based on provider
 @app.route('/disconnect')
@@ -289,9 +309,13 @@ def newCategory():
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
+        file = request.files['image']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))      
         newCategory = Category(
             name=bleach.clean(request.form['name']),
-            image=bleach.clean(request.form['image']),
+            image=url_for('uploaded_file', filename=filename),
             user_id=login_session['user_id'])
         session.add(newCategory)
         flash('New Category successfully added!')
@@ -307,12 +331,14 @@ def editCategory(category_id):
         return redirect('/login')
     editedCategory = session.query(Category).filter_by(id=category_id).one()
     if request.method == 'POST':
+        file = request.files['image']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         if request.form['name']:
             editedCategory.name = bleach.clean(request.form['name'])
-        if request.form['birthday']:
-            editedCategory.birthday = bleach.clean(request.form['birthday'])
         if request.form['image']:
-            editedCategory.image = bleach.clean(request.form['image'])
+            editedCategory.image = url_for('uploaded_file', filename=filename)
         session.add(editedCategory)
         flash('Category successfully edited')
         session.commit()
@@ -366,12 +392,16 @@ def newItem(category_id):
         return redirect('/login')
     category = session.query(Category).filter_by(id=category_id).one()
     if request.method == 'POST':
+        file = request.files['image']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         newItem = Item(name=bleach.clean(request.form['name']),
                        description=bleach.clean(request.form['description']),
                        date=bleach.clean(request.form['date']),
+                       image=url_for('uploaded_file', filename=filename),
                        category_id=category_id,
-                       user_id=login_session['user_id'],
-                       image=bleach.clean(request.form['image']))
+                       user_id=login_session['user_id'],)
         session.add(newItem)
         flash('New Item successfully added in %s!' % category.name)
         session.commit()
@@ -388,10 +418,14 @@ def editItem(category_id, item_id):
     category = session.query(Category).filter_by(id=category_id).one()
     editedItem = session.query(Item).filter_by(id=item_id).one()
     if request.method == 'POST':
+        file = request.files['image']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         if request.form['name']:
             editedItem.name = bleach.clean(request.form['name'])
         if request.form['image']:
-            editedItem.image = bleach.clean(request.form['image'])
+            editedItem.image = url_for('uploaded_file', filename=filename)
         if request.form['description']:
             editedItem.image = bleach.clean(request.form['description'])
         if request.form['date']:
