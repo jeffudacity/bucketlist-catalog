@@ -1,24 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-<nav class="navbar navbar-inverse navbar-fixed-top">
-  <div class="container">
-
-    <div id="add-nav">
-      <a href="{{ url_for('newCategory') }}">Add</a>
-    </div>
-
-    <div class="navbar-header">
-      <a id="logo" class="navbar-brand" href="/">Catalog</a>
-    </div>
-    {% if 'username' not in session %}
-      <div class="navbar-right"><a href="/login">Login</a></div>
-    {% else %}
-      <a href="{{ url_for('disconnect') }}"><div class="navbar-right">Logout</div></a>
-    {% endif %}
-    <div id="result"></div>
-  </div>
-</nav>
+{% include "navbar.html" %}
 
 <div class="row">
   <div id="form" class="col-md-8 col-md-offset-2">
@@ -27,6 +10,7 @@
       <form action="#" method='POST' class="form-horizontal">
         <input type="submit" class="btn btn-primary" value="Yes">
           <a href="{{ url_for('showCategories') }}"<button class="btn btn-danger">No</button></a>
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
       </form>
 
   </div>

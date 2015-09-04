@@ -47,6 +47,7 @@ Bleach is required.
 PostgreSQL is required.
 Flask is required.
 sqlalchemy is required.
+flask-seasurf is required.
 
 To get started:
 

@@ -5,6 +5,7 @@ from flask import Flask, flash, jsonify
 from flask import redirect, render_template, request, url_for, make_response
 from flask import send_from_directory
 from flask import session as login_session
+from flask.ext.seasurf import SeaSurf
 from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
@@ -22,6 +23,7 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 8 * 1024 * 1024
+csrf = SeaSurf(app)
 
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
@@ -55,8 +57,10 @@ def showLogin():
     return render_template('login.html', STATE=state)
 
 
+@csrf.exempt
 @app.route('/fbconnect', methods=['POST'])
 def fbconnect():
+    ''' Exempted from CSRF validation.'''
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
@@ -132,8 +136,10 @@ def fbdisconnect():
     return "function myFunction() {alert('You have been successfully logged out'); window.location.href = '/';}</script><body onload='myFunction()'>"
 
 
+@csrf.exempt
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
+    ''' Exempted from CSRF validation.'''
     # Validate state token
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)

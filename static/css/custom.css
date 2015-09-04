@@ -12,39 +12,24 @@ a {
   color: rgb(33, 160, 201);
   text-decoration: none;
 }
+
 a:hover {
   color: rgb(33, 160, 201);
   text-decoration: none;
 }
 
-.container {
-
+#goals {
+  border-left: solid 1px rgb(126,151,186);
 }
 
 #categories {
   margin-bottom: 20px;
 }
 
-#sidebar {
-  border-right: solid 1px gray;
-}
-
-#commands {
-
-}
-
-#item {
-}
-
 #item img {
   width: 100%;
   max-height: 245px;
   margin-top: 23px
-}
-
-#login {
-  text-align: center;
-  padding-top: 100px;
 }
 
 #listOfCategories img {
@@ -59,54 +44,6 @@ a:hover {
   max-height: 70px;
 }
 
-/* NAVBAR */
-
-#add-nav {
-  position: absolute;
-  padding-top: 15px;
-  font-size: 17px
-}
-.navbar {
-  background-color: rgb(231, 236, 243);
-  border-color: rgb(126,151,186);
-  color: rgb(33, 160, 201);
-  font-family: 'Ubuntu', sans-serif;
-}
-
-.navbar-brand
-{
-  position: absolute;
-  width: 100%;
-  left: 0;
-  top: 0;
-  text-align: center;
-  margin: auto;
-}
-.navbar-right {
-  padding-top: 15px;
-  font-size: 17px
-}
-
-#logo {
-  color: rgb(33, 160, 201);
-  font-size: 32px;
-  width: 100px;
-  left: 50%;
-  margin-left: -40px;
-}
-
-#login {
-  border-radius:25px;
-  margin-top: 50px;
-}
-
-#fb-login {
-  vertical-align: 15px;
-}
-
-#btn-login, #signInButton {
-  margin: 10px;
-}
 #form {
   text-align: center;
 }
@@ -125,17 +62,11 @@ a:hover {
 .center {
   text-align: center;
 }
+
 .flash {
   text-align: center;
   padding-top: 10px;
   color: #18CA1C;
-}
-
-#birthday {
-  padding-top: 28px;
-}
-#cat-pic img {
-  max-height: 150px;
 }
 
 .date {
@@ -143,7 +74,60 @@ a:hover {
   padding-top: 16px;
 }
 
-.price {
-  color: rgb(33, 160, 201);
-  padding-top: 16px;
-}
+
+/* NAVBAR */
+
+  #add-nav {
+    position: absolute;
+    padding-top: 15px;
+    font-size: 17px
+  }
+  .navbar {
+    background-color: rgb(231, 236, 243);
+    border-color: rgb(126,151,186);
+    color: rgb(33, 160, 201);
+    font-family: 'Ubuntu', sans-serif;
+  }
+
+  .navbar-brand
+  {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    text-align: center;
+    margin: auto;
+  }
+  .navbar-right {
+    padding-top: 15px;
+    font-size: 17px
+  }
+
+  #logo {
+    color: rgb(33, 160, 201);
+    font-size: 32px;
+    width: 100%;
+  }
+  @media (max-width: 768px) {
+    #logo {
+      font-size: 22px;
+    }
+  }
+
+  #login {
+    border-radius:25px;
+    margin-top: 50px;
+    text-align: center;
+    padding-top: 100px;
+  }
+
+/* LOGIN */
+
+  #fb-login {
+    vertical-align: 15px;
+  }
+
+  #btn-login, #signInButton {
+    margin: 10px;
+  }
+

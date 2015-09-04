@@ -1,0 +1,14 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="row">
+      <div class="navbar-header col-xs-10 col-xs-offset-1">
+        <a id="logo" class="navbar-brand" href="/">Bucketlist Catalog</a>
+      </div>
+      {% if 'username' not in session %}
+        <div class="navbar-right col-xs-1"><a href="/login">Login</a></div>
+      {% else %}
+        <a href="{{ url_for('disconnect') }}"><div class="navbar-right col-xs-1">Logout</div></a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
